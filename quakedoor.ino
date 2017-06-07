@@ -19,7 +19,14 @@ void setup() {
     BT.begin(9600);               //set serial comunication rate 
 }
 
+unsigned long pretime1 = 0; //will store last time sending text to Bluetooth was updated
+
+// constants won't change :
+const long interval = 1000;           // interval at which to send (milliseconds)
+
 void loop() { 
+  unsigned long curtime1 = millis();
+  
   long measurement = vibMeasure();
   bool human = humanDetect();
   int gasMeasurement = gasMeasure();
@@ -51,7 +58,13 @@ void loop() {
         }
       }
    }
-   else noTone(sp);
+   else {
+    noTone(sp);
+     if(curtime1-pretime1 >= interval){
+       BT.println("0");
+        pretime1 = millis();
+     }
+   }
 
 
     
